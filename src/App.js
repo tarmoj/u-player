@@ -1,23 +1,152 @@
-import logo from './logo.svg';
 import './App.css';
+import packageInfo from '../package.json';
+import * as Tone from "tone"
+import {useEffect, useState} from "react";
+
+const version = packageInfo.version;
+
 
 function App() {
+
+  const [playbackData, setPlayBackData] = useState(null);
+  const [time, setTime] = useState(0);
+  const [pieceIndex, setPieceIndex] = useState(0); // index to the selected piece in tracks.json
+
+  const [counter, setCounter] = useState( localStorage.hasOwnProperty("LayerPlayerListeningCounter") ?
+      parseInt(localStorage.getItem("LayerPlayerListeningCounter")) : 0 );
+  const [hasListenedAll, setHasListenedAll] = useState(false);
+
+  // TODO: pack into one object playInfo, that is set be preparePlayback
+  const duration = playbackData ? playbackData[pieceIndex].duration : 0;
+  const title = playbackData ? playbackData[pieceIndex].title : "";
+  const versionName = playbackData ? playbackData[pieceIndex].playList[counter].name : "";
+  const versions = playbackData ? playbackData[pieceIndex].playList.length : 0;
+
+  useEffect( ()=>{
+    fetch(process.env.PUBLIC_URL + "/tracks.json")
+        .then((res) => res.json())
+        .then((data) => {
+          setPlayBackData(data);
+          console.log("Loaded json object: ", data);
+          preparePlayback(pieceIndex, counter);
+        })
+  }, [] );
+
+  const createChannel = (volume, pan) => {
+    const channel = new Tone.Channel({ channelCount:2, volume:volume, pan:pan}).toDestination();
+    return channel;
+  }
+
+  const createPlayer = (soundFile, loop=false, delay=0) => {
+    const source = process.env.PUBLIC_URL + "/sounds/" + soundFile;
+    const newPlayer = new Tone.Player({
+      url: source,
+      loop: loop,
+      // onload: () => {
+      //     console.log("Local onload -  loaded", soundFile);
+      // }
+    }).sync().start(delay); // not sure if offsetcan be handles this way
+    //newPlayer.connect(channel);
+    return newPlayer;
+  }
+
+  const loadResources = (event) => {
+    if (!playbackData) {console.log("No playBackData"); return; }
+    const index = event.target.value;
+    console.log("Should set  piece to: ", index, playbackData[index].title);
+    stop(); // for any case
+    setTimeout( ()=>{
+      preparePlayback(index);
+      setPieceIndex(index);
+    }, 200); // give some time to stop
+
+  }
+
+  const getSoundfile = (id) => {
+    if (!playbackData) return;
+    const trackInfo =     playbackData[pieceIndex].tracks.find( (track) => track.id===id );
+    console.log(trackInfo);
+    return (trackInfo) ? trackInfo.soundFile : "";
+
+  }
+
+  const preparePlayback = (pieceIndex=0, playListIndex=0) => { // index to piece  later: take it from pieceIndex
+    if (!playbackData) return;
+    console.log("preparePlayback", pieceIndex, playListIndex);
+    const activeTracks = playbackData[pieceIndex].playList[playListIndex].tracks;
+    console.log("Should start playing: ", activeTracks);
+    for (let track of activeTracks) {
+      const soundFile = getSoundfile(track.id);
+      console.log("SoundFile:", soundFile);
+      track.channel = createChannel(track.volume, track.pan);
+      track.player = createPlayer(soundFile);
+      track.player.connect(track.channel);
+      //track.player.channel.pan = track.pan;
+      //track.player.channel.volume = track.volume;
+    }
+
+  }
+
+  const lastTimeReaction = () => {
+    console.log("This was the last available version. Now you can choose whicever you want");
+    setHasListenedAll(true);
+  }
+
+  const start = () => {
+    console.log("Start");
+    Tone.Transport.start("+0.1"); // is this necessary
+    Tone.Transport.scheduleRepeat(() => {
+      setTime(Math.floor(Tone.Transport.seconds));
+      if (Tone.Transport.seconds>duration && Tone.Transport.state==="started") {
+        stop();
+        if (counter < playbackData[pieceIndex].playList.length-1) {
+          const newCounter = counter + 1;
+          localStorage.setItem("LayerPlayerListeningCounter", newCounter.toString());
+          setTimeout( ()=>{
+            preparePlayback(pieceIndex, newCounter); // this should be actually in effect on pieceIndex, counter
+            setCounter(newCounter);
+          }, 200); // give some time to stop
+        } else {
+          lastTimeReaction();
+          console.log("Counter would be out of range: ", counter, playbackData[pieceIndex].playList.length) ;
+        }
+      }
+    }, 1);
+  }
+
+  const pause = () => {
+    Tone.Transport.pause("+0.01");
+  }
+
+  const stop = () => {
+    console.log("Stop");
+    Tone.Transport.stop("+0.05");
+    Tone.Transport.cancel(0.1); // do we need this?
+    setTime(0);
+  }
+
+
+
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        U: layer-player test
+        <div>
+          <p>Piece: {title}, duration: {duration} s, versions: {versions}</p>
+          { hasListenedAll &&  <div><b>You have listened to all available versions. Thank you!</b></div> }
+          <p>Youre will listen/are listing this piece for <b>{counter +1}.</b> time</p>
+          { versionName &&  <p>Version name: {versionName}</p>}
+          <br />
+          <button onClick={()=>preparePlayback(pieceIndex, counter) } >Load</button>
+          <button onClick={()=>start() } >Start</button>
+          <button onClick={()=>stop() } >Stop</button>
+          Time: {time}
+
+        </div>
+
       </header>
+
     </div>
   );
 }

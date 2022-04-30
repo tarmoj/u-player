@@ -1,0 +1,68 @@
+[
+	{
+		"title": "Sumer is icumen in",
+		"duration": 15,
+
+		"tracks": [
+			{"id":1,  "name": "Bourdon1", "soundFile":"sumer/Bourdon1.mp3"},
+			{"id":2,  "name": "Bourdon2", "soundFile":"sumer/Bourdon2.mp3"},
+			{"id":3,  "name": "Bass1", "soundFile":"sumer/Bass1.mp3"},
+			{"id":4,  "name": "Flute", "soundFile":"sumer/Flute.mp3"},
+			{"id":5,  "name": "Piccolo", "soundFile":"sumer/Piccolo.mp3"},
+			{"id":6,  "name": "Bass2", "soundFile":"sumer/Bass2.mp3"}
+		],
+
+		"playList": [
+			{ 	"counter": 0,
+				"name": "Just bourdon",
+				"tracks": [
+				{ "id": 1, "pan": -0.2, "volume": 0},
+				{ "id": 2, "pan": 0.2, "volume": 0}
+			]
+			},
+			{ 	"counter": 1,
+				"name": "Bourdon + Bass flute",
+				"tracks": [
+				{ "id": 1, "pan": -0.4, "volume": -6},
+				{ "id": 2, "pan": 0.4, "volume": -6 },
+				{ "id": 3, "pan": 0, "volume": 3 }
+			]
+			},
+
+			{ 	"counter": 2,
+				"name": "Bourdon + Bass + flute",
+				"tracks": [
+					{ "id": 1, "pan": -0.4, "volume": -6 },
+					{ "id": 2, "pan": 0.4, "volume": -6 },
+					{ "id": 3, "pan": -0.6, "volume": 3 },
+					{ "id": 4, "pan": 0.6, "volume": 0 }
+				]
+			},
+
+			{ 	"counter": 3,
+				"name": "Bourdon + Bass + flute + Bass2",
+				"tracks": [
+					{ "id": 1, "pan": -0.4, "volume": -6 },
+					{ "id": 2, "pan": 0.4, "volume": -6 },
+					{ "id": 3, "pan": -0.6, "volume": 3},
+					{ "id": 4, "pan": 0.6, "volume": 0 },
+					{ "id": 6, "pan": 0, "volume": 6 }
+				]
+			},
+
+			{ 	"counter": 4,
+				"name": "Bourdon + Bass + flute + Bass2 + piccolo",
+				"tracks": [
+					{ "id": 1, "pan": -1, "volume": -6 },
+					{ "id": 2, "pan": 1, "volume": -6 },
+					{ "id": 3, "pan": -0.6, "volume": 3},
+					{ "id": 4, "pan": 0.6, "volume": 0 },
+					{ "id": 5, "pan": -0.4, "volume": 0 },
+					{ "id": 6, "pan": 0.4, "volume": 0 }
+				]
+			}
+
+		]
+
+	}
+]
