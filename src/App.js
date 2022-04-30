@@ -15,6 +15,14 @@ function App() {
   const [counter, setCounter] = useState( localStorage.hasOwnProperty("LayerPlayerListeningCounter") ?
       parseInt(localStorage.getItem("LayerPlayerListeningCounter")) : 0 );
   const [hasListenedAll, setHasListenedAll] = useState(false);
+  const [userTouched, setUserTouched]  = useState(false);
+
+  const resumeAudio = () => {
+    Tone.getContext().resume();
+    console.log("Audio resume");
+    setUserTouched(true);
+    preparePlayback(pieceIndex, counter);
+  }
 
   // TODO: pack into one object playInfo, that is set be preparePlayback
   const duration = playbackData ? playbackData[pieceIndex].duration : 0;
@@ -99,8 +107,8 @@ function App() {
       setTime(Math.floor(Tone.Transport.seconds));
       if (Tone.Transport.seconds>duration && Tone.Transport.state==="started") {
         stop();
-        if (counter < playbackData[pieceIndex].playList.length-1) {
-          const newCounter = counter + 1;
+        const newCounter = counter + 1;
+        if (newCounter < playbackData[pieceIndex].playList.length) {
           localStorage.setItem("LayerPlayerListeningCounter", newCounter.toString());
           setTimeout( ()=>{
             preparePlayback(pieceIndex, newCounter); // this should be actually in effect on pieceIndex, counter
@@ -131,19 +139,23 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        U: layer-player test
-        <div>
-          <p>Piece: {title}, duration: {duration} s, versions: {versions}</p>
-          { hasListenedAll &&  <div><b>You have listened to all available versions. Thank you!</b></div> }
-          <p>Youre will listen/are listing this piece for <b>{counter +1}.</b> time</p>
-          { versionName &&  <p>Version name: {versionName}</p>}
-          <br />
-          <button onClick={()=>preparePlayback(pieceIndex, counter) } >Load</button>
-          <button onClick={()=>start() } >Start</button>
-          <button onClick={()=>stop() } >Stop</button>
-          Time: {time}
+        <h1>U: layer-player test</h1>
+        <p><small>Version {version}</small></p>
+        {!userTouched ?
+            <div><button onClick={()=>resumeAudio()}> Start and enable audio</button></div>
+            :
+            <div>
+              <p>Piece: {title}, duration: {duration} s, versions: {versions}</p>
+              {hasListenedAll && <div><b>You have listened to all available versions. Thank you!</b></div>}
+              <p>Youre will listen/are listing this piece for <b>{counter + 1}.</b> time</p>
+              {versionName && <p>Version name: {versionName}</p>}
+              <br/>
+              <button onClick={() => start()}>Start</button>
+              <button onClick={() => stop()}>Stop</button>
+              Time: {time}
 
-        </div>
+            </div>
+        }
 
       </header>
 

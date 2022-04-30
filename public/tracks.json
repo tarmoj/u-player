@@ -1,7 +1,7 @@
 [
 	{
 		"title": "Sumer is icumen in",
-		"duration": 15,
+		"duration": 45,
 
 		"tracks": [
 			{"id":1,  "name": "Bourdon1", "soundFile":"sumer/Bourdon1.mp3"},
@@ -34,7 +34,7 @@
 				"tracks": [
 					{ "id": 1, "pan": -0.4, "volume": -6 },
 					{ "id": 2, "pan": 0.4, "volume": -6 },
-					{ "id": 3, "pan": -0.6, "volume": 3 },
+					{ "id": 3, "pan": -0.6, "volume": 0 },
 					{ "id": 4, "pan": 0.6, "volume": 0 }
 				]
 			},
@@ -44,8 +44,8 @@
 				"tracks": [
 					{ "id": 1, "pan": -0.4, "volume": -6 },
 					{ "id": 2, "pan": 0.4, "volume": -6 },
-					{ "id": 3, "pan": -0.6, "volume": 3},
-					{ "id": 4, "pan": 0.6, "volume": 0 },
+					{ "id": 3, "pan": -0.8, "volume": -3},
+					{ "id": 4, "pan": 0.8, "volume": -3 },
 					{ "id": 6, "pan": 0, "volume": 6 }
 				]
 			},
@@ -55,9 +55,9 @@
 				"tracks": [
 					{ "id": 1, "pan": -1, "volume": -6 },
 					{ "id": 2, "pan": 1, "volume": -6 },
-					{ "id": 3, "pan": -0.6, "volume": 3},
+					{ "id": 3, "pan": -0.6, "volume": 0},
 					{ "id": 4, "pan": 0.6, "volume": 0 },
-					{ "id": 5, "pan": -0.4, "volume": 0 },
+					{ "id": 5, "pan": 0, "volume": 0 },
 					{ "id": 6, "pan": 0.4, "volume": 0 }
 				]
 			}
