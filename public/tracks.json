@@ -17,17 +17,17 @@
 			{ 	"counter": 0,
 				"name": "Just bourdon",
 				"tracks": [
-				{ "name": "Bourdon1", "pan": -0.2, "volume": 0},
-				{ "name": "Bourdon2", "pan": 0.2, "volume": 0}
-			]
+					{ "name": "Bourdon1", "pan": -0.2, "volume": 0},
+					{ "name": "Bourdon2", "pan": 0.2, "volume": 0}
+				]
 			},
 			{ 	"counter": 1,
 				"name": "Bourdon + Bass flute",
 				"tracks": [
-				{ "name": "Bourdon1", "pan": -0.4, "volume": -6},
-				{ "name": "Bourdon2", "pan": 0.4, "volume": -6 },
-				{ "name": "Bass1", "pan": 0, "volume": 3 }
-			]
+					{ "name": "Bourdon1", "pan": -0.4, "volume": -6},
+					{ "name": "Bourdon2", "pan": 0.4, "volume": -6 },
+					{ "name": "Bass1", "pan": 0, "volume": 3 }
+				]
 			},
 
 			{ 	"counter": 2,
@@ -123,6 +123,179 @@
 					{ "name": "Perc2", "pan": 0.2, "volume": 0},
 					{ "name": "Flute", "pan": -0.5, "volume": 0},
 					{ "name": "Piano", "pan": 0.5, "volume": 0}
+				]
+			}
+
+		]
+
+	},
+
+	{
+		"title": "James Tenney - For piano and ... (excerpt)",
+		"uid": "TenneyX",
+		"duration": 20,
+
+		"tracks": [
+			{"name": "Solo", "soundFile":"tenney/Solo.mp3"},
+			{"name": "1", "soundFile":"tenney/1.mp3"},
+			{"name": "2", "soundFile":"tenney/2.mp3"},
+			{"name": "3", "soundFile":"tenney/3.mp3"},
+			{"name": "4", "soundFile":"tenney/4.mp3"},
+			{"name": "5", "soundFile":"tenney/5.mp3"},
+			{"name": "6", "soundFile":"tenney/6.mp3"},
+			{"name": "7", "soundFile":"tenney/7.mp3"},
+			{"name": "8", "soundFile":"tenney/8.mp3"},
+			{"name": "9", "soundFile":"tenney/9.mp3"},
+			{"name": "10", "soundFile":"tenney/10.mp3"},
+			{"name": "11", "soundFile":"tenney/11.mp3"},
+			{"name": "12", "soundFile":"tenney/12.mp3"},
+			{"name": "13", "soundFile":"tenney/13.mp3"},
+			{"name": "14", "soundFile":"tenney/14.mp3"},
+			{"name": "15", "soundFile":"tenney/15.mp3"},
+			{"name": "16", "soundFile":"tenney/16.mp3"},
+			{"name": "17", "soundFile":"tenney/17.mp3"},
+			{"name": "18", "soundFile":"tenney/18.mp3"},
+			{"name": "19", "soundFile":"tenney/19.mp3"},
+			{"name": "20", "soundFile":"tenney/20.mp3"}
+		],
+
+		"playList": [
+			{ 	"counter": 0,
+				"name": "Piano solo + base",
+				"tracks": [
+					{ "name": "Solo", "pan": 0, "volume": 0},
+					{ "name": "13", "pan": -1, "volume": 0},
+					{ "name": "14", "pan": 1, "volume": 0},
+					{ "name": "15", "pan": -0.8, "volume": 0},
+					{ "name": "16", "pan": 0.8, "volume": 0},
+					{ "name": "17", "pan": -0.6, "volume": 0},
+					{ "name": "18", "pan": 0.6, "volume": 0},
+					{ "name": "19", "pan": -0.4, "volume": 0},
+					{ "name": "20", "pan": 0.4, "volume": 0}
+				]
+			},
+
+			{ 	"counter": 1,
+				"name": "Solo + base + 2 voices",
+				"tracks": [
+					{ "name": "Solo", "pan": 0, "volume": 0},
+					{ "name": "13", "pan": -1, "volume": -3},
+					{ "name": "14", "pan": 1, "volume": -3},
+					{ "name": "15", "pan": -0.9, "volume": -3},
+					{ "name": "16", "pan": 0.9, "volume": -3},
+					{ "name": "17", "pan": -0.8, "volume": -3},
+					{ "name": "18", "pan": 0.8, "volume": -3},
+					{ "name": "19", "pan": -0.7, "volume": -3},
+					{ "name": "20", "pan": 0.7, "volume": -3},
+
+					{ "name": "6", "pan": -0.4, "volume": 0},
+					{ "name": "7", "pan": 0.4, "volume": 0}
+
+
+				]
+			},
+
+			{
+				"counter": 2,
+				"name": "Solo + base + 4 voices",
+				"tracks": [
+					{ "name": "Solo", "pan": 0, "volume": 0},
+					{ "name": "13", "pan": -1, "volume": -3},
+					{ "name": "14", "pan": 1, "volume": -3},
+					{ "name": "15", "pan": -0.9, "volume": -3},
+					{ "name": "16", "pan": 0.9, "volume": -3},
+					{ "name": "17", "pan": -0.8, "volume": -3},
+					{ "name": "18", "pan": 0.8, "volume": -3},
+					{ "name": "19", "pan": -0.7, "volume": -3},
+					{ "name": "20", "pan": 0.7, "volume": -3},
+
+					{ "name": "6", "pan": -0.6, "volume": -3},
+					{ "name": "7", "pan": 0.6, "volume": -3},
+					{ "name": "5", "pan": -0.4, "volume": 0},
+					{ "name": "8", "pan": 0.4, "volume": 0}
+
+
+				]
+			},
+
+			{
+				"counter": 3,
+				"name": "Solo + base + 6 voices",
+				"tracks": [
+					{ "name": "Solo", "pan": 0, "volume": 0},
+					{ "name": "13", "pan": -1, "volume": -3},
+					{ "name": "14", "pan": 1, "volume": -3},
+					{ "name": "15", "pan": -0.9, "volume": -3},
+					{ "name": "16", "pan": 0.9, "volume": -3},
+					{ "name": "17", "pan": -0.8, "volume": -3},
+					{ "name": "18", "pan": 0.8, "volume": -3},
+					{ "name": "19", "pan": -0.7, "volume": -3},
+					{ "name": "20", "pan": 0.7, "volume": -3},
+
+					{ "name": "6", "pan": -0.6, "volume": -3},
+					{ "name": "7", "pan": 0.6, "volume": -3},
+					{ "name": "5", "pan": -0.5, "volume": -3},
+					{ "name": "8", "pan": 0.5, "volume": -3},
+					{ "name": "4", "pan": -0.4, "volume": 0},
+					{ "name": "9", "pan": -0.4, "volume": 0}
+				]
+			},
+
+			{
+				"counter": 4,
+				"name": "Solo + base + 8 voices",
+				"tracks": [
+					{ "name": "Solo", "pan": 0, "volume": 0},
+					{ "name": "13", "pan": -1, "volume": -3},
+					{ "name": "14", "pan": 1, "volume": -3},
+					{ "name": "15", "pan": -0.9, "volume": -3},
+					{ "name": "16", "pan": 0.9, "volume": -3},
+					{ "name": "17", "pan": -0.8, "volume": -3},
+					{ "name": "18", "pan": 0.8, "volume": -3},
+					{ "name": "19", "pan": -0.7, "volume": -3},
+					{ "name": "20", "pan": 0.7, "volume": -3},
+
+					{ "name": "6", "pan": -0.6, "volume": -3},
+					{ "name": "7", "pan": 0.6, "volume": -3},
+					{ "name": "5", "pan": -0.5, "volume": -3},
+					{ "name": "8", "pan": 0.5, "volume": -3},
+					{ "name": "4", "pan": -0.8, "volume": -3},
+					{ "name": "9", "pan": 0.8, "volume": -3},
+					{ "name": "4", "pan": -0.4, "volume": 0},
+					{ "name": "10", "pan": -0.4, "volume": 0}
+
+
+				]
+			},
+
+			{
+				"counter": 5,
+				"name": "Solo + base + 12 voices",
+				"tracks": [
+					{ "name": "Solo", "pan": 0, "volume": 0},
+					{ "name": "13", "pan": -1, "volume": -3},
+					{ "name": "14", "pan": 1, "volume": -3},
+					{ "name": "15", "pan": -0.9, "volume": -3},
+					{ "name": "16", "pan": 0.9, "volume": -3},
+					{ "name": "17", "pan": -0.8, "volume": -3},
+					{ "name": "18", "pan": 0.8, "volume": -3},
+					{ "name": "19", "pan": -0.7, "volume": -3},
+					{ "name": "20", "pan": 0.7, "volume": -3},
+
+					{ "name": "6", "pan": -0.6, "volume": 0},
+					{ "name": "7", "pan": 0.6, "volume": 0},
+					{ "name": "5", "pan": -0.5, "volume": 0},
+					{ "name": "8", "pan": 0.5, "volume": 0},
+					{ "name": "4", "pan": -0.8, "volume": 0},
+					{ "name": "9", "pan": 0.8, "volume": 0},
+					{ "name": "4", "pan": -0.4, "volume": 0},
+					{ "name": "10", "pan": -0.4, "volume": 0},
+					{ "name": "11", "pan": -0.3, "volume": 0},
+					{ "name": "12", "pan": 0.3, "volume": 0},
+					{ "name": "1", "pan": -0.2, "volume": 0},
+					{ "name": "2", "pan": 0.2, "volume": 0}
+
+
 				]
 			}
 

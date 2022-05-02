@@ -39,10 +39,12 @@ function App() {
   const [pieceIndex, setPieceIndex] = useState(getStoredPieceIndex()); // index to the selected piece in tracks.json
   const [pieceInfo, setPieceInfo] = useState({title:"", duration:0, versionName:"", versions:0});
   const [timerID, setTimerID] = useState(0);
+  const [loadedCounter, setLoadedCounter] = useState(0);
 
   const [counter, setCounter] = useState(  0 );
   const [hasListenedAll, setHasListenedAll] = useState(false);
   const [userTouched, setUserTouched]  = useState(false);
+  const [started, setStarted] = useState(false); // use this flag to prevent double initialisation
 
   const resumeAudio = () => {
     Tone.getContext().resume();
@@ -58,27 +60,43 @@ function App() {
   // const versions = playbackData ? playbackData[pieceIndex].playList.length : 0;
 
   useEffect( ()=>{
-    fetch(process.env.PUBLIC_URL + "/tracks.json")
-        .then((res) => res.json())
-        .then((data) => {
-          setPlayBackData(data);
-          console.log("Loaded json object: ", data);
-          init(data, pieceIndex);
-
-        })
+    if (!started) { // prevent running twice
+      setStarted(true);
+      fetch(process.env.PUBLIC_URL + "/tracks.json")
+          .then((res) => res.json())
+          .then((data) => {
+            setPlayBackData(data);
+            console.log("Loaded json object: ", data);
+            init(data, pieceIndex);
+          })
+    } else {
+      console.log("Already started")
+    }
   }, [] );
 
   const init = (data, index) => {
+    setHasListenedAll(false);
     const counter = getStoredCounter(data[index].uid);
     console.log("Found counter for ", counter, data[index].uid);
-    if (counter === data[pieceIndex].playList.length-1) {
+    if (counter === data[index].playList.length-1) {
       lastTimeReaction();
     }
+    // hmm we need init from fetch... but not preparePlayback
     preparePlayback(index, counter);
     setCounter(counter);
     setPieceIndex(index);
+    setLoadedCounter(0);
     storePieceIndex(index);
   }
+
+  Tone.loaded().then(() => {
+    if (loadedCounter<2) {
+      setLoadedCounter(loadedCounter+1);
+      console.log("Loaded counter: ", loadedCounter);
+    } else {
+      //console.log("perhaps how loaded?")
+    }
+  });
 
   const getStoredCounter = (uid) => {
     const key = "ULP_"+uid;
@@ -106,9 +124,9 @@ function App() {
     const newPlayer = new Tone.Player({
       url: source,
       loop: loop,
-      // onload: () => {
-      //     console.log("Local onload -  loaded", soundFile);
-      // }
+      onload: () => {
+          console.log("Local onload -  loaded", soundFile);
+      }
     }).sync().start(delay); // not sure if offsetcan be handles this way
     return newPlayer;
   }
@@ -165,6 +183,8 @@ function App() {
     // release old tracks
     dispose(pieceIndex, counter); // clear old buffers
 
+    setLoadedCounter(0);
+
     const activeTracks = playbackData[pieceIndex].playList[playListIndex].tracks;
     console.log("Should start playing: ", activeTracks);
     for (let track of activeTracks) {
@@ -190,18 +210,19 @@ function App() {
       //console.log("Duration: ", pieceInfo.duration);
       if (Tone.Transport.seconds>pieceInfo.duration && Tone.Transport.state==="started") {
         stop();
-        const newCounter = counter + 1;
-        console.log("Counter now: ", newCounter, counter);
-        if (newCounter < playbackData[pieceIndex].playList.length) {
-          setStoredCounter(playbackData[pieceIndex].uid, newCounter);
-          setCounter(newCounter);
-          //localStorage.setItem("LayerPlayerListeningCounter", newCounter.toString());
-          setTimeout( ()=>{
-            preparePlayback(pieceIndex, newCounter); // this should be actually in effect on pieceIndex, counter
-          }, 200); // give some time to stop
-        } else {
-          lastTimeReaction();
-          console.log("Counter would be out of range: ", counter, playbackData[pieceIndex].playList.length) ;
+        if (!hasListenedAll) {
+          const newCounter = counter + 1;
+          console.log("Counter now: ", newCounter, counter);
+          if (newCounter < playbackData[pieceIndex].playList.length) {
+            setStoredCounter(playbackData[pieceIndex].uid, newCounter);
+            setCounter(newCounter);
+            setTimeout(() => {
+              preparePlayback(pieceIndex, newCounter); // this should be actually in effect on pieceIndex, counter
+            }, 200); // give some time to stop
+          } else {
+            lastTimeReaction();
+            console.log("Counter would be out of range: ", counter, playbackData[pieceIndex].playList.length);
+          }
         }
       }
     }, 1);
@@ -251,6 +272,14 @@ function App() {
             {!userTouched ?
                 <div><Button onClick={()=>resumeAudio()}> Start and enable audio</Button></div>
                 :
+                <>
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={  loadedCounter<1 }
+                >
+                  <CircularProgress color="inherit" />
+
+                </Backdrop>
                 <Grid container direction={"column"} spacing={3} alignItems={"center"} alignContent={"center"}>
                   {playbackData &&  <Grid item>Select piece:
                     <Select value={pieceIndex} onChange={loadResources}>
@@ -278,6 +307,7 @@ function App() {
 
 
                 </Grid>
+                </>
             }
 
           </header>
