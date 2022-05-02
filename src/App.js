@@ -257,18 +257,24 @@ function App() {
                                                                     value={index}>{piece.title}</MenuItem>)}
                     </Select>
                   </div>}
-                  <p>Piece: {pieceInfo.title}, duration: {pieceInfo.duration} s, versions: {pieceInfo.versions}</p>
-                  {hasListenedAll &&
+                  <div>
+                    <Button onClick={() => start()}>Start</Button>
+                    <Button onClick={() => pause()}>Pause</Button>
+                    <Button onClick={() => stop()}>Stop</Button>
+                    Time: {time}
+                  </div>
+                  <p>Duration: {pieceInfo.duration} s, versions: {pieceInfo.versions}</p>
+                  {hasListenedAll ?
                   <div><b>You have listened to all available versions. Thank you!</b><br />
                     Now you can select the vresion you want to hear: {createPlaylistSelection()}
-                  </div>}
-                  <p>Youre will listen/are listing this piece for <b>{counter + 1}.</b> time</p>
+                  </div> :
+                      <p>Youre will listen/are listing this piece for <b>{counter + 1}.</b> time</p>
+                  }
+
+
                   {pieceInfo.versionName && <p>Version name: {pieceInfo.versionName}</p>}
                   <br/>
-                  <Button onClick={() => start()}>Start</Button>
-                  <Button onClick={() => pause()}>Pause</Button>
-                  <Button onClick={() => stop()}>Stop</Button>
-                  Time: {time}
+
 
                 </div>
             }
