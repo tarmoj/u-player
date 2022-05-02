@@ -10,7 +10,7 @@ function App() {
 
   const [playbackData, setPlayBackData] = useState(null);
   const [time, setTime] = useState(0);
-  const [pieceIndex, setPieceIndex] = useState(0); // index to the selected piece in tracks.json
+  const [pieceIndex, setPieceIndex] = useState(1); // index to the selected piece in tracks.json
 
   const [counter, setCounter] = useState( localStorage.hasOwnProperty("LayerPlayerListeningCounter") ?
       parseInt(localStorage.getItem("LayerPlayerListeningCounter")) : 0 );
@@ -36,6 +36,9 @@ function App() {
         .then((data) => {
           setPlayBackData(data);
           console.log("Loaded json object: ", data);
+          if (counter === data[pieceIndex].playList.length) {
+            lastTimeReaction();
+          }
           preparePlayback(pieceIndex, counter);
         })
   }, [] );
@@ -55,7 +58,6 @@ function App() {
       //     console.log("Local onload -  loaded", soundFile);
       // }
     }).sync().start(delay); // not sure if offsetcan be handles this way
-    //newPlayer.connect(channel);
     return newPlayer;
   }
 
@@ -82,9 +84,27 @@ function App() {
     }
   }
 
+  const dispose = (pieceIndex=0, playListIndex=0) => {
+    // release old tracks
+    const playList = playbackData[pieceIndex].playList[playListIndex];
+    if (playList) {
+      for (let track of playList.tracks) {
+        if (track.hasOwnProperty("channel")) {
+          console.log("Trying to dispose: ", track.name);
+          if (track.channel) track.channel.dispose();
+          if (track.player) track.player.dispose();
+        }
+      }
+    }
+  }
+
   const preparePlayback = (pieceIndex=0, playListIndex=0) => { // index to piece  later: take it from pieceIndex
     if (!playbackData) return;
     console.log("preparePlayback", pieceIndex, playListIndex);
+
+    // release old tracks
+    dispose(pieceIndex, counter); // clear old buffers
+
     const activeTracks = playbackData[pieceIndex].playList[playListIndex].tracks;
     console.log("Should start playing: ", activeTracks);
     for (let track of activeTracks) {
@@ -110,6 +130,7 @@ function App() {
       if (Tone.Transport.seconds>duration && Tone.Transport.state==="started") {
         stop();
         const newCounter = counter + 1;
+        console.log("Counter now: ", newCounter);
         if (newCounter < playbackData[pieceIndex].playList.length) {
           localStorage.setItem("LayerPlayerListeningCounter", newCounter.toString());
           setTimeout( ()=>{
@@ -153,6 +174,7 @@ function App() {
               {versionName && <p>Version name: {versionName}</p>}
               <br/>
               <button onClick={() => start()}>Start</button>
+              <button onClick={() => pause()}>Pause</button>
               <button onClick={() => stop()}>Stop</button>
               Time: {time}
 

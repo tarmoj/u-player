@@ -68,7 +68,7 @@
 
 	{
 		"title": "Age Veeroos -  Sketch 2",
-		"duration": 144,
+		"duration": 14,
 
 		"tracks": [
 			{"id":1,  "name": "Perc1", "soundFile":"age/Perc1.mp3"},
@@ -81,10 +81,46 @@
 
 		"playList": [
 			{ 	"counter": 0,
-				"name": "Just bourdon",
+				"name": "Percussion",
 				"tracks": [
 					{ "name": "Perc1", "pan": -0.2, "volume": 0},
 					{ "name": "Perc2", "pan": 0.2, "volume": 0}
+				]
+			},
+
+			{ 	"counter": 1,
+				"name": "Percussion + strings",
+				"tracks": [
+					{ "name": "Perc1", "pan": 0, "volume": 0},
+					{ "name": "Violin", "pan": -0.5, "volume": 0},
+					{ "name": "Cello", "pan": 0.5, "volume": 0}
+
+				]
+			},
+
+			{ 	"counter": 2,
+				"name": "Percussion + Piano",
+				"tracks": [
+					{ "name": "Perc1", "pan": -0.2, "volume": 0},
+					{ "name": "Piano", "pan": 0.2, "volume": 0}
+				]
+			},
+
+			{ 	"counter": 3,
+				"name": "Percussion + Flute",
+				"tracks": [
+					{ "name": "Perc1", "pan": -0.2, "volume": 0},
+					{ "name": "Flute", "pan": 0.2, "volume": 0}
+				]
+			},
+
+			{ 	"counter": 4,
+				"name": "Perc1, perc2 + pf + fl",
+				"tracks": [
+					{ "name": "Perc1", "pan": -0.2, "volume": 0},
+					{ "name": "Perc2", "pan": 0.2, "volume": 0},
+					{ "name": "Flute", "pan": -0.5, "volume": 0},
+					{ "name": "Piano", "pan": 0.5, "volume": 0}
 				]
 			}
 
