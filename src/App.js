@@ -139,13 +139,14 @@ function App() {
 
   const dispose = (pieceIndex=0, playListIndex=0) => {
     // release old tracks
-    const playList = playbackData[pieceIndex].playList[playListIndex];
-    if (playList) {
-      for (let track of playList.tracks) {
-        if (track.hasOwnProperty("channel")) {
-          console.log("Trying to dispose: ", track.name);
-          if (track.channel) track.channel.dispose();
-          if (track.player) track.player.dispose();
+    for (let set of playbackData[pieceIndex].playList) {
+      if (set) {
+        for (let track of set.tracks) {
+          if (track.hasOwnProperty("channel")) {
+            console.log("Trying to dispose: ", track.name);
+            if (track.channel) track.channel.dispose();
+            if (track.player) track.player.dispose();
+          }
         }
       }
     }
@@ -186,7 +187,7 @@ function App() {
     Tone.Transport.start("+0.1"); // is this necessary
     const id =  Tone.Transport.scheduleRepeat(() => {
       setTime(Math.floor(Tone.Transport.seconds));
-      console.log("Duration: ", pieceInfo.duration);
+      //console.log("Duration: ", pieceInfo.duration);
       if (Tone.Transport.seconds>pieceInfo.duration && Tone.Transport.state==="started") {
         stop();
         const newCounter = counter + 1;
@@ -250,33 +251,33 @@ function App() {
             {!userTouched ?
                 <div><Button onClick={()=>resumeAudio()}> Start and enable audio</Button></div>
                 :
-                <div>
-                  {playbackData &&  <div>Select piece:
+                <Grid container direction={"column"} spacing={3} alignItems={"center"} alignContent={"center"}>
+                  {playbackData &&  <Grid item>Select piece:
                     <Select value={pieceIndex} onChange={loadResources}>
                       {playbackData.map((piece, index) => <MenuItem key={"pieceMenu" + index}
                                                                     value={index}>{piece.title}</MenuItem>)}
                     </Select>
-                  </div>}
-                  <div>
+                  </Grid>}
+                  <Grid item  alignContent={"center"}>
                     <Button onClick={() => start()}>Start</Button>
                     <Button onClick={() => pause()}>Pause</Button>
                     <Button onClick={() => stop()}>Stop</Button>
                     Time: {time}
-                  </div>
-                  <p>Duration: {pieceInfo.duration} s, versions: {pieceInfo.versions}</p>
+                  </Grid>
+                  <Grid item>Duration: {pieceInfo.duration} s, versions: {pieceInfo.versions}</Grid>
                   {hasListenedAll ?
-                  <div><b>You have listened to all available versions. Thank you!</b><br />
-                    Now you can select the vresion you want to hear: {createPlaylistSelection()}
-                  </div> :
-                      <p>Youre will listen/are listing this piece for <b>{counter + 1}.</b> time</p>
+                  <Grid item><b>You have listened to all available versions. Thank you!</b><br />
+                    Now you can select the version you want to hear: {createPlaylistSelection()}
+                  </Grid> :
+                      <>
+                      <Grid item>Youre will listen/are listening this piece for <b>{counter + 1}.</b> time</Grid>
+                      {pieceInfo.versionName && <Grid item>Version name: {pieceInfo.versionName}</Grid>}
+                      </>
                   }
 
 
-                  {pieceInfo.versionName && <p>Version name: {pieceInfo.versionName}</p>}
-                  <br/>
 
-
-                </div>
+                </Grid>
             }
 
           </header>
