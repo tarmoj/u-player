@@ -47,6 +47,7 @@ function App() {
 
   const createPlayer = (soundFile, loop=false, delay=0) => {
     const source = process.env.PUBLIC_URL + "/sounds/" + soundFile;
+    console.log("Source: ", source);
     const newPlayer = new Tone.Player({
       url: source,
       loop: loop,
@@ -70,12 +71,15 @@ function App() {
 
   }
 
-  const getSoundfile = (id) => {
+  const getSoundfile = (name) => {
     if (!playbackData) return;
-    const trackInfo =     playbackData[pieceIndex].tracks.find( (track) => track.id===id );
-    console.log(trackInfo);
-    return (trackInfo) ? trackInfo.soundFile : "";
-
+    const trackInfo =     playbackData[pieceIndex].tracks.find( (track) => track.name===name );
+    if (!trackInfo) {
+      console.log("TrackInfo not found for:", name);
+      return "";
+    } else {
+      return trackInfo.soundFile;
+    }
   }
 
   const preparePlayback = (pieceIndex=0, playListIndex=0) => { // index to piece  later: take it from pieceIndex
@@ -84,19 +88,17 @@ function App() {
     const activeTracks = playbackData[pieceIndex].playList[playListIndex].tracks;
     console.log("Should start playing: ", activeTracks);
     for (let track of activeTracks) {
-      const soundFile = getSoundfile(track.id);
-      console.log("SoundFile:", soundFile);
-      track.channel = createChannel(track.volume, track.pan);
-      track.player = createPlayer(soundFile);
-      track.player.connect(track.channel);
-      //track.player.channel.pan = track.pan;
-      //track.player.channel.volume = track.volume;
+      const soundFile = getSoundfile(track.name);
+      if (soundFile) {
+        track.channel = createChannel(track.volume, track.pan);
+        track.player = createPlayer(soundFile);
+        track.player.connect(track.channel);
+      }
     }
-
   }
 
   const lastTimeReaction = () => {
-    console.log("This was the last available version. Now you can choose whicever you want");
+    console.log("This was the last available version. Now you can choose whichever you want");
     setHasListenedAll(true);
   }
 

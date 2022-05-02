@@ -16,53 +16,81 @@
 			{ 	"counter": 0,
 				"name": "Just bourdon",
 				"tracks": [
-				{ "id": 1, "pan": -0.2, "volume": 0},
-				{ "id": 2, "pan": 0.2, "volume": 0}
+				{ "name": "Bourdon1", "pan": -0.2, "volume": 0},
+				{ "name": "Bourdon2", "pan": 0.2, "volume": 0}
 			]
 			},
 			{ 	"counter": 1,
 				"name": "Bourdon + Bass flute",
 				"tracks": [
-				{ "id": 1, "pan": -0.4, "volume": -6},
-				{ "id": 2, "pan": 0.4, "volume": -6 },
-				{ "id": 3, "pan": 0, "volume": 3 }
+				{ "name": "Bourdon1", "pan": -0.4, "volume": -6},
+				{ "name": "Bourdon2", "pan": 0.4, "volume": -6 },
+				{ "name": "Bass1", "pan": 0, "volume": 3 }
 			]
 			},
 
 			{ 	"counter": 2,
 				"name": "Bourdon + Bass + flute",
 				"tracks": [
-					{ "id": 1, "pan": -0.4, "volume": -6 },
-					{ "id": 2, "pan": 0.4, "volume": -6 },
-					{ "id": 3, "pan": -0.6, "volume": 0 },
-					{ "id": 4, "pan": 0.6, "volume": 0 }
+					{ "name": "Bourdon1", "pan": -0.4, "volume": -6 },
+					{ "name": "Bourdon2", "pan": 0.4, "volume": -6 },
+					{ "name": "Bass1", "pan": -0.6, "volume": 0 },
+					{ "name": "Flute", "pan": 0.6, "volume": 0 }
 				]
 			},
 
 			{ 	"counter": 3,
 				"name": "Bourdon + Bass + flute + Bass2",
 				"tracks": [
-					{ "id": 1, "pan": -0.4, "volume": -6 },
-					{ "id": 2, "pan": 0.4, "volume": -6 },
-					{ "id": 3, "pan": -0.8, "volume": -3},
-					{ "id": 4, "pan": 0.8, "volume": -3 },
-					{ "id": 6, "pan": 0, "volume": 6 }
+					{ "name": "Bourdon1", "pan": -0.4, "volume": -6 },
+					{ "name": "Bourdon2", "pan": 0.4, "volume": -6 },
+					{ "name": "Bass1", "pan": -0.8, "volume": -3},
+					{ "name": "Flute", "pan": 0.8, "volume": -3 },
+					{ "name": "Bass2", "pan": 0, "volume": 6 }
 				]
 			},
 
 			{ 	"counter": 4,
 				"name": "Bourdon + Bass + flute + Bass2 + piccolo",
 				"tracks": [
-					{ "id": 1, "pan": -1, "volume": -6 },
-					{ "id": 2, "pan": 1, "volume": -6 },
-					{ "id": 3, "pan": -0.6, "volume": 0},
-					{ "id": 4, "pan": 0.6, "volume": 0 },
-					{ "id": 5, "pan": 0, "volume": 0 },
-					{ "id": 6, "pan": 0.4, "volume": 0 }
+					{ "name": "Bourdon1", "pan": -1, "volume": -6 },
+					{ "name": "Bourdon2", "pan": 1, "volume": -6 },
+					{ "name": "Bass1", "pan": -0.6, "volume": 0},
+					{ "name": "Flute", "pan": 0.6, "volume": 0 },
+					{ "name": "Piccolo", "pan": 0, "volume": 0 },
+					{ "name": "Bass2", "pan": 0.4, "volume": 0 }
+				]
+			}
+
+		]
+
+	},
+
+	{
+		"title": "Age Veeroos -  Sketch 2",
+		"duration": 144,
+
+		"tracks": [
+			{"id":1,  "name": "Perc1", "soundFile":"age/Perc1.mp3"},
+			{"id":2,  "name": "Perc2", "soundFile":"age/Perc2.mp3"},
+			{"id":3,  "name": "Violin", "soundFile":"age/Violin.mp3"},
+			{"id":4,  "name": "Cello", "soundFile":"age/Cello.mp3"},
+			{"id":5,  "name": "Piano", "soundFile":"age/Piano.mp3"},
+			{"id":6,  "name": "Flute", "soundFile":"age/Flute.mp3"}
+		],
+
+		"playList": [
+			{ 	"counter": 0,
+				"name": "Just bourdon",
+				"tracks": [
+					{ "name": "Perc1", "pan": -0.2, "volume": 0},
+					{ "name": "Perc2", "pan": 0.2, "volume": 0}
 				]
 			}
 
 		]
 
 	}
+
+
 ]
