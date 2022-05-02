@@ -1,19 +1,46 @@
 import './App.css';
 import packageInfo from '../package.json';
 import * as Tone from "tone"
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+  Dialog, DialogActions, DialogContent, DialogContentText,
+  DialogTitle,
+  Grid,
+  LinearProgress, MenuItem, Select,
+  ThemeProvider
+} from "@mui/material";
+import { createTheme } from '@mui/material/styles';
+
 
 const version = packageInfo.version;
 
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+  // typography: { // has no effect on the size, only letters in buttons
+  //     fontSize: 8,
+  // },
+});
 
 function App() {
 
+  const getStoredPieceIndex = () => {
+    const key = "ULP_pieceIndex";
+    const value = localStorage.hasOwnProperty(key) ?  parseInt(localStorage.getItem(key)) : 0;
+    return value;
+  }
+
   const [playbackData, setPlayBackData] = useState(null);
   const [time, setTime] = useState(0);
-  const [pieceIndex, setPieceIndex] = useState(1); // index to the selected piece in tracks.json
+  const [pieceIndex, setPieceIndex] = useState(getStoredPieceIndex()); // index to the selected piece in tracks.json
+  const [pieceInfo, setPieceInfo] = useState({title:"", duration:0, versionName:"", versions:0});
+  const [timerID, setTimerID] = useState(0);
 
-  const [counter, setCounter] = useState( localStorage.hasOwnProperty("LayerPlayerListeningCounter") ?
-      parseInt(localStorage.getItem("LayerPlayerListeningCounter")) : 0 );
+  const [counter, setCounter] = useState(  0 );
   const [hasListenedAll, setHasListenedAll] = useState(false);
   const [userTouched, setUserTouched]  = useState(false);
 
@@ -25,10 +52,10 @@ function App() {
   }
 
   // TODO: pack into one object playInfo, that is set be preparePlayback
-  const duration = playbackData ? playbackData[pieceIndex].duration : 0;
-  const title = playbackData ? playbackData[pieceIndex].title : "";
-  const versionName = playbackData ? playbackData[pieceIndex].playList[counter].name : "";
-  const versions = playbackData ? playbackData[pieceIndex].playList.length : 0;
+  // const duration = playbackData ? playbackData[pieceIndex].duration : 0;
+  // const title = playbackData ? playbackData[pieceIndex].title : "";
+  // const versionName = playbackData ? playbackData[pieceIndex].playList[counter].name : "";
+  // const versions = playbackData ? playbackData[pieceIndex].playList.length : 0;
 
   useEffect( ()=>{
     fetch(process.env.PUBLIC_URL + "/tracks.json")
@@ -36,12 +63,37 @@ function App() {
         .then((data) => {
           setPlayBackData(data);
           console.log("Loaded json object: ", data);
-          if (counter === data[pieceIndex].playList.length) {
-            lastTimeReaction();
-          }
-          preparePlayback(pieceIndex, counter);
+          init(data, pieceIndex);
+
         })
   }, [] );
+
+  const init = (data, index) => {
+    const counter = getStoredCounter(data[index].uid);
+    console.log("Found counter for ", counter, data[index].uid);
+    if (counter === data[pieceIndex].playList.length-1) {
+      lastTimeReaction();
+    }
+    preparePlayback(index, counter);
+    setCounter(counter);
+    setPieceIndex(index);
+    storePieceIndex(index);
+  }
+
+  const getStoredCounter = (uid) => {
+    const key = "ULP_"+uid;
+    const value = localStorage.hasOwnProperty(key) ?  parseInt(localStorage.getItem(key)) : 0;
+    return value;
+  }
+
+  const setStoredCounter = (uid, value) => {
+    const key = "ULP_"+uid;
+    return localStorage.setItem(key, value.toString());
+  }
+
+
+
+  const storePieceIndex = (index) => localStorage.setItem("ULP_pieceIndex", index.toString());
 
   const createChannel = (volume, pan) => {
     const channel = new Tone.Channel({ channelCount:2, volume:volume, pan:pan}).toDestination();
@@ -63,21 +115,22 @@ function App() {
 
   const loadResources = (event) => {
     if (!playbackData) {console.log("No playBackData"); return; }
+    dispose(pieceIndex, counter);
     const index = event.target.value;
     console.log("Should set  piece to: ", index, playbackData[index].title);
     stop(); // for any case
+
     setTimeout( ()=>{
-      preparePlayback(index);
-      setPieceIndex(index);
+      init(playbackData,index)
     }, 200); // give some time to stop
 
   }
 
-  const getSoundfile = (name) => {
+  const getSoundfile = (name, piece=pieceIndex) => {
     if (!playbackData) return;
-    const trackInfo =     playbackData[pieceIndex].tracks.find( (track) => track.name===name );
+    const trackInfo =     playbackData[piece].tracks.find( (track) => track.name===name );
     if (!trackInfo) {
-      console.log("TrackInfo not found for:", name);
+      console.log("TrackInfo not found for:", name, playbackData[piece].title);
       return "";
     } else {
       return trackInfo.soundFile;
@@ -102,13 +155,19 @@ function App() {
     if (!playbackData) return;
     console.log("preparePlayback", pieceIndex, playListIndex);
 
+    setPieceInfo({
+      title:playbackData[pieceIndex].title,
+      duration:playbackData[pieceIndex].duration,
+      versionName:playbackData[pieceIndex].playList[playListIndex].name,
+      versions: playbackData[pieceIndex].playList.length } );
+
     // release old tracks
     dispose(pieceIndex, counter); // clear old buffers
 
     const activeTracks = playbackData[pieceIndex].playList[playListIndex].tracks;
     console.log("Should start playing: ", activeTracks);
     for (let track of activeTracks) {
-      const soundFile = getSoundfile(track.name);
+      const soundFile = getSoundfile(track.name, pieceIndex);
       if (soundFile) {
         track.channel = createChannel(track.volume, track.pan);
         track.player = createPlayer(soundFile);
@@ -125,17 +184,19 @@ function App() {
   const start = () => {
     console.log("Start");
     Tone.Transport.start("+0.1"); // is this necessary
-    Tone.Transport.scheduleRepeat(() => {
+    const id =  Tone.Transport.scheduleRepeat(() => {
       setTime(Math.floor(Tone.Transport.seconds));
-      if (Tone.Transport.seconds>duration && Tone.Transport.state==="started") {
+      console.log("Duration: ", pieceInfo.duration);
+      if (Tone.Transport.seconds>pieceInfo.duration && Tone.Transport.state==="started") {
         stop();
         const newCounter = counter + 1;
-        console.log("Counter now: ", newCounter);
+        console.log("Counter now: ", newCounter, counter);
         if (newCounter < playbackData[pieceIndex].playList.length) {
-          localStorage.setItem("LayerPlayerListeningCounter", newCounter.toString());
+          setStoredCounter(playbackData[pieceIndex].uid, newCounter);
+          setCounter(newCounter);
+          //localStorage.setItem("LayerPlayerListeningCounter", newCounter.toString());
           setTimeout( ()=>{
             preparePlayback(pieceIndex, newCounter); // this should be actually in effect on pieceIndex, counter
-            setCounter(newCounter);
           }, 200); // give some time to stop
         } else {
           lastTimeReaction();
@@ -143,47 +204,79 @@ function App() {
         }
       }
     }, 1);
+    console.log("Created timer: ", id);
+    setTimerID(id);
   }
 
   const pause = () => {
-    Tone.Transport.pause("+0.01");
+    Tone.Transport.toggle("+0.01");
   }
 
   const stop = () => {
     console.log("Stop");
     Tone.Transport.stop("+0.05");
-    Tone.Transport.cancel(0.1); // do we need this?
+    //Tone.Transport.cancel("+0.1"); // do we need this?
+    Tone.Transport.clear(timerID);
     setTime(0);
   }
 
 
+  //const selectRef = useRef();
+
+  const createPlaylistSelection = () => {
+
+    return playbackData && (
+        <div>
+          Select version:
+        <Select value={counter} onChange={ (event) => {
+          const index = event.target.value;
+          preparePlayback(pieceIndex, index);
+          setCounter(index);
+        }}>
+          {playbackData[pieceIndex].playList.map((list, index) => <MenuItem key={"playlistMenu" + index}
+                                                        value={index}>{list.name}</MenuItem>)}
+        </Select>
+        </div>
+    )
+  }
 
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>U: layer-player test</h1>
-        <p><small>Version {version}</small></p>
-        {!userTouched ?
-            <div><button onClick={()=>resumeAudio()}> Start and enable audio</button></div>
-            :
-            <div>
-              <p>Piece: {title}, duration: {duration} s, versions: {versions}</p>
-              {hasListenedAll && <div><b>You have listened to all available versions. Thank you!</b></div>}
-              <p>Youre will listen/are listing this piece for <b>{counter + 1}.</b> time</p>
-              {versionName && <p>Version name: {versionName}</p>}
-              <br/>
-              <button onClick={() => start()}>Start</button>
-              <button onClick={() => pause()}>Pause</button>
-              <button onClick={() => stop()}>Stop</button>
-              Time: {time}
+      <ThemeProvider theme={darkTheme}>
+        <div className="App">
+          <header className="App-header">
+            <h1>U: layer-player test</h1>
+            <p><small>Version {version}</small></p>
+            {!userTouched ?
+                <div><Button onClick={()=>resumeAudio()}> Start and enable audio</Button></div>
+                :
+                <div>
+                  {playbackData &&  <div>Select piece:
+                    <Select value={pieceIndex} onChange={loadResources}>
+                      {playbackData.map((piece, index) => <MenuItem key={"pieceMenu" + index}
+                                                                    value={index}>{piece.title}</MenuItem>)}
+                    </Select>
+                  </div>}
+                  <p>Piece: {pieceInfo.title}, duration: {pieceInfo.duration} s, versions: {pieceInfo.versions}</p>
+                  {hasListenedAll &&
+                  <div><b>You have listened to all available versions. Thank you!</b><br />
+                    Now you can select the vresion you want to hear: {createPlaylistSelection()}
+                  </div>}
+                  <p>Youre will listen/are listing this piece for <b>{counter + 1}.</b> time</p>
+                  {pieceInfo.versionName && <p>Version name: {pieceInfo.versionName}</p>}
+                  <br/>
+                  <Button onClick={() => start()}>Start</Button>
+                  <Button onClick={() => pause()}>Pause</Button>
+                  <Button onClick={() => stop()}>Stop</Button>
+                  Time: {time}
 
-            </div>
-        }
+                </div>
+            }
 
-      </header>
+          </header>
 
-    </div>
+        </div>
+      </ThemeProvider>
   );
 }
 
