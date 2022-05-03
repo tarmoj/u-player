@@ -262,13 +262,39 @@ function App() {
     )
   }
 
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const createInfoDialog = () => {
+    return (
+        <Dialog open={dialogOpen} onClose={()=>setDialogOpen(false)}>
+          <DialogTitle>What is it?</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              <b>U: layer-player</b> is an experimental application developed for ensemble U:'s series
+              <a className={"App-link"} href={"https://www.uuu.ee/j/projects/residentuur-eng"}>Residentuu:r 2022 -  Musical recordings</a><br />
+              It is not meant to be "production ready".
+            </DialogContentText>
+            <p>Layer-player explores the possibility of variable playback on different listens. </p>
+            <p>Select a piece. If you listen to the entire piece from beginning to end without stopping, you will get to the next "level", where a new layer will be added (or taken away).</p>
+            <p>When you will have listened to all available versions, a menu will appear where you can then freely choose between the versions.</p>
+            <p>Feedback: Tarmo Johannes trmjhnns@gmail.com</p>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={()=>setDialogOpen(false)}>Ok</Button>
+          </DialogActions>
+        </Dialog>
+    );
+  };
+
 
   return (
       <ThemeProvider theme={darkTheme}>
         <div className="App">
           <header className="App-header">
             <h1>U: layer-player test</h1>
-            <p><small>Version {version}</small></p>
+            <p><small>Version {version}</small>
+              <Button variant={"outlined"} sx={{ ml:"10px" }} size={"small"} onClick={()=>setDialogOpen(true)}>Info</Button>
+            </p>
+            {createInfoDialog()}
             {!userTouched ?
                 <div><Button onClick={()=>resumeAudio()}> Start and enable audio</Button></div>
                 :

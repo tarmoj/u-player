@@ -133,7 +133,7 @@
 	{
 		"title": "James Tenney - For piano and ... (excerpt)",
 		"uid": "TenneyX",
-		"duration": 20,
+		"duration": 174,
 
 		"tracks": [
 			{"name": "Solo", "soundFile":"tenney/Solo.mp3"},
@@ -200,14 +200,14 @@
 				"name": "Solo + base + 4 voices",
 				"tracks": [
 					{ "name": "Solo", "pan": 0, "volume": 0},
-					{ "name": "13", "pan": -1, "volume": -3},
-					{ "name": "14", "pan": 1, "volume": -3},
-					{ "name": "15", "pan": -0.9, "volume": -3},
-					{ "name": "16", "pan": 0.9, "volume": -3},
-					{ "name": "17", "pan": -0.8, "volume": -3},
-					{ "name": "18", "pan": 0.8, "volume": -3},
-					{ "name": "19", "pan": -0.7, "volume": -3},
-					{ "name": "20", "pan": 0.7, "volume": -3},
+					{ "name": "13", "pan": 1, "volume": -3},
+					{ "name": "14", "pan": -1, "volume": -3},
+					{ "name": "15", "pan": 0.9, "volume": -3},
+					{ "name": "16", "pan": -0.9, "volume": -3},
+					{ "name": "17", "pan": 0.8, "volume": -3},
+					{ "name": "18", "pan": -0.8, "volume": -3},
+					{ "name": "19", "pan": 0.7, "volume": -3},
+					{ "name": "20", "pan": -0.7, "volume": -3},
 
 					{ "name": "6", "pan": -0.6, "volume": -3},
 					{ "name": "7", "pan": 0.6, "volume": -3},
@@ -232,12 +232,12 @@
 					{ "name": "19", "pan": -0.7, "volume": -3},
 					{ "name": "20", "pan": 0.7, "volume": -3},
 
-					{ "name": "6", "pan": -0.6, "volume": -3},
-					{ "name": "7", "pan": 0.6, "volume": -3},
-					{ "name": "5", "pan": -0.5, "volume": -3},
-					{ "name": "8", "pan": 0.5, "volume": -3},
+					{ "name": "6", "pan": 0.6, "volume": -3},
+					{ "name": "7", "pan": -0.6, "volume": -3},
+					{ "name": "5", "pan": 0.5, "volume": -3},
+					{ "name": "8", "pan": -0.5, "volume": -3},
 					{ "name": "4", "pan": -0.4, "volume": 0},
-					{ "name": "9", "pan": -0.4, "volume": 0}
+					{ "name": "9", "pan": 0.4, "volume": 0}
 				]
 			},
 
